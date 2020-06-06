@@ -1,0 +1,12 @@
+{
+    "files.associations": {
+        "functional": "c",
+        "type_traits": "c",
+        "xtr1common": "c",
+        "random": "c",
+        "*.ipp": "c",
+        "filesystem": "c",
+        "vector": "c",
+        "xstring": "c"
+    }
+}
