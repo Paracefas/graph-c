@@ -6,6 +6,53 @@
 
 // number of vertices in graph
 #define V 5
+int count(node* n, graph g)
+{
+    int res = 0;
+    for(int i = 0; i < N_EDGES; ++i)
+        if(g.edges[i].from->label == n->label) ++res;
+    return res;
+}
+
+int degree(char label, graph g)
+{
+    node* n = find(label, g);
+    return count(n, g)-1;
+}
+
+typedef struct { int degr; node* n; } int_node;
+
+int_node check_less_degree(graph g)
+{
+    int degr = 999999;
+    node* nod = NULL;
+    for(int i = 0; i < N_NODES; ++i)
+    {
+        if(degree(g.nodes[i]->label, g) < degr)
+        {
+            degr = degree(g.nodes[i]->label, g);
+            nod = g.nodes[i];
+        }
+    }
+    return (int_node) { .degr = degr, .n = nod };
+}
+
+node* find_neighbours(char label, graph g)
+{
+    node* neighbours = (node*)malloc(sizeof(node)*degree(label, g));
+    for(int i = 0, j = 0; i < N_EDGES; ++i)
+        if(g.edges[i].from->label == label) neighbours[j++] = *g.edges[i].to;
+    return neighbours;
+}
+
+node* find(char label, graph g)
+{
+    node* n = NULL;
+    for(int i = 0; i < N_NODES; ++i)
+        if(g.nodes[i]->label == label) n = g.nodes[i];
+    return n;
+}
+
 
 // create a 2d array of size 5x5
 //for adjacency matrix to represent graph
@@ -16,58 +63,6 @@ int G[V][V] = {{0, 10, 0, 6, 0},
                {0 , 0, 0, 11, 0}};
 
 int main() {
-  int no_edge;  // number of edge
-
-  // create a array to track selected vertex
-  // selected will become true otherwise false
-  int selected[V];
-
-  // set selected false initially
-  memset(selected, false, sizeof(selected));
-  
-  // set number of edge to 0
-  no_edge = 0;
-
-  // the number of egde in minimum spanning tree will be
-  // always less than (V -1), where V is number of vertices in
-  //graph
-
-  // choose 0th vertex and make it true
-  selected[0] = true;
-
-  int x;  //  row number
-  int y;  //  col number
-
-  // print for edge and weight
-  printf("Edge : Weight\n");
-
-  while (no_edge < V - 1) {
-    //For every vertex in the set S, find the all adjacent vertices
-    // , calculate the distance from the vertex selected at step 1.
-    // if the vertex is already in the set S, discard it otherwise
-    //choose another vertex nearest to selected vertex  at step 1.
-
-    int min = INF;
-    x = 0;
-    y = 0;
-
-    for (int i = 0; i < V; i++) {
-      if (selected[i]) {
-        for (int j = 0; j < V; j++) {
-          if (!selected[j] && G[i][j]) {  // not in selected and there is an edge
-            if (min > G[i][j]) {
-              min = G[i][j];
-              x = i;
-              y = j;
-            }
-          }
-        }
-      }
-    }
-    printf("%d - %d : %d\n", x, y, G[x][y]);
-    selected[y] = true;
-    no_edge++;
-  }
 
   return 0;
 }
